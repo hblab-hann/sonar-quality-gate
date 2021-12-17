@@ -94,13 +94,13 @@ export class GitlabMerge extends Gitlab implements GitMerge {
   async createReviewComments(
     params: GitReviewParam[]
   ): Promise<entity.Notes[] | boolean> {
-    let data: any;
     const version = await this.getVersion();
     if (!version) {
       return false;
     }
+    const data: entity.Notes[] = [];
     for (const i in params) {
-      const response = this.createCommitDiscussion(
+      const response = await this.createCommitDiscussion(
         {
           comment: params[i].comment,
           path: params[i].path,
