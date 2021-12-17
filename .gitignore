@@ -4,3 +4,4 @@ start.sh
 build.sh
 sonar-project.properties
 .scannerwork
+.idea

@@ -2,6 +2,7 @@ import { Axios } from "../http";
 import { APIType } from "./enum";
 import * as entity from "./entity";
 import { Git, GitMerge, GitReviewParam } from "../git";
+import { Log } from '../utils';
 
 export class Gitlab implements Git {
   host: string;
@@ -100,14 +101,18 @@ export class GitlabMerge extends Gitlab implements GitMerge {
     }
     const data: entity.Notes[] = [];
     for (const i in params) {
-      const response = await this.createCommitDiscussion(
-        {
-          comment: params[i].comment,
-          path: params[i].path,
-          line: params[i].line,
-          version: version
-        });
-      data.push(response);
+      try {
+        const response = await this.createCommitDiscussion(
+            {
+              comment: params[i].comment,
+              path: params[i].path,
+              line: params[i].line,
+              version: version
+            });
+        data.push(response);
+      } catch (e) {
+        Log.warning("createCommitDiscussion failed : " + e + " (" + params[i].path + " line " + params[i].line)
+      }
     }
     return data;
   }
